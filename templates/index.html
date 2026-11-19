@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block cuerpo %}
+<header class="nav">
+  <a href="#inicio" class="logo">LR</a>
+  <nav>
+    <a href="#estudios">Estudios</a>
+    <a href="#habilidades">Habilidades</a>
+    {% if experiencias %}<a href="#experiencia">Experiencia</a>{% endif %}
+    <a href="#contacto">Contacto</a>
+  </nav>
+</header>
+
+<main>
+  <section id="inicio" class="hero">
+    <!-- ANIMACIÓN: el nombre aparece subiendo desde una máscara (keyframes "subir" en style.css) -->
+    <h1><span class="mascara"><span class="subir">{{ perfil.nombre }}</span></span></h1>
+    <p class="rol">{{ perfil.titulo }}</p>
+    <p class="bio">{{ perfil.bio }}</p>
+    <a class="boton" href="{{ url_for('cv') }}"><i class="fa-solid fa-file-arrow-down"></i> Descargar CV</a>
+  </section>
+
+  <section id="estudios">
+    <h2>Estudios</h2>
+    <ul class="linea">
+      {% for e in estudios %}
+      <li><strong>{{ e.titulo_visible() }}</strong><span>{{ e.detalle() }}</span></li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section id="habilidades">
+    <h2>Habilidades</h2>
+    <div class="grupos">
+      {% for categoria, lista in grupos.items() %}
+      <div>
+        <h3>{{ categoria }}</h3>
+        <ul class="chips">{% for h in lista %}<li>{{ h.titulo_visible() }}</li>{% endfor %}</ul>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% if experiencias %}
+  <section id="experiencia">
+    <h2>Experiencia</h2>
+    <ul class="linea">
+      {% for x in experiencias %}
+      <li><strong>{{ x.titulo_visible() }}</strong><span>{{ x.detalle() }}</span>
+        {% if x.get('descripcion') %}<p>{{ x.get('descripcion') }}</p>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <section id="contacto">
+    <h2>Contacto</h2>
+    <div class="contacto">
+      <div class="enlaces">
+        {% if perfil.email %}<a href="mailto:{{ perfil.email }}"><i class="fa-solid fa-envelope"></i> {{ perfil.email }}</a>{% endif %}
+        {% if perfil.github %}<a href="{{ perfil.github }}" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> GitHub</a>{% endif %}
+        {% if perfil.linkedin %}<a href="{{ perfil.linkedin }}" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>{% endif %}
+        <span><i class="fa-solid fa-location-dot"></i> Córdoba, Argentina</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>© Lautaro Reyes</span>
+  {% if session.get('admin') %}<a href="{{ url_for('editar') }}">Editar</a> <a href="{{ url_for('logout') }}">Salir</a>
+  {% else %}<a href="{{ url_for('login') }}">Acceso</a>{% endif %}
+</footer>
+{% endblock %}

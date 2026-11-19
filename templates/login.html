@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block titulo %}Acceso{% endblock %}
+{% block cuerpo %}
+<main class="caja">
+  <h1>Acceso</h1>
+  {% for m in get_flashed_messages() %}<p class="aviso">{{ m }}</p>{% endfor %}
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <label>{{ form.username.label.text }} {{ form.username() }}</label>
+    <label>{{ form.password.label.text }} {{ form.password() }}</label>
+    <button class="boton">Entrar</button>
+  </form>
+  <p><a href="{{ url_for('inicio') }}">Volver al portfolio</a></p>
+</main>
+{% endblock %}

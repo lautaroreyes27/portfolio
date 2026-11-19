@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block titulo %}Editar portfolio{% endblock %}
+{% block cuerpo %}
+<main class="caja ancha">
+  <h1>Editar portfolio</h1>
+  <p><a href="{{ url_for('inicio') }}">Ver portfolio</a> | <a href="{{ url_for('logout') }}">Salir</a></p>
+  {% for m in get_flashed_messages() %}<p class="aviso">{{ m }}</p>{% endfor %}
+
+  <h2>Perfil</h2>
+  <form method="post">
+    {{ form.hidden_tag() }}
+    {% for c in [form.nombre, form.titulo, form.bio, form.email, form.github, form.linkedin] %}
+    <label>{{ c.label.text }} {{ c() }}</label>
+    {% endfor %}
+    <button class="boton">Guardar perfil</button>
+  </form>
+
+  {% for tipo, clase in tipos.items() %}
+  <h2>{{ tipo|capitalize }}s</h2>
+  <ul class="lista-edit">
+    {% for it in items[tipo] %}
+    <li>{{ it.titulo_visible() }} <small>{{ it.detalle() }}</small>
+      <form method="post" action="{{ url_for('item_borrar', tipo=tipo, item_id=it.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="borrar" title="Borrar"><i class="fa-solid fa-trash"></i></button>
+      </form></li>
+    {% endfor %}
+  </ul>
+  <form method="post" action="{{ url_for('item_nuevo', tipo=tipo) }}" class="fila">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {% for c in clase.CAMPOS %}<input name="{{ c }}" placeholder="{{ c }}" required>{% endfor %}
+    <button class="boton">Agregar</button>
+  </form>
+  {% endfor %}
+</main>
+{% endblock %}
